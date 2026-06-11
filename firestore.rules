@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Reports ──────────────────────────────────────────────────────────────
+    // Any authenticated user can read all reports (needed for matching algo).
+    // Only the owner can create their own report.
+    // Updates are allowed to any authenticated user (matching algo updates
+    // the OTHER user's report status to 'matched').
+    // Deletes are allowed to any authenticated user (admin deletes reports).
+    match /Reports/{reportId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // ── Matches ───────────────────────────────────────────────────────────────
+    // Involved users can read their own matches.
+    // Any authenticated user can create/update (matching algo runs client-side).
+    // Any authenticated user can delete (admin cascading delete).
+    match /Matches/{matchId} {
+      allow read: if request.auth != null
+                  && request.auth.uid in resource.data.involvedUsers;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null
+                    && request.auth.uid in resource.data.involvedUsers;
+      allow delete: if request.auth != null;
+    }
+
+    // ── Chats ─────────────────────────────────────────────────────────────────
+    // Participants can read and write the chat document.
+    // Any authenticated user can delete (admin cascading delete).
+    match /Chats/{chatId} {
+      allow read, update: if request.auth != null
+                          && request.auth.uid in resource.data.participants;
+      allow create: if request.auth != null;
+      allow delete: if request.auth != null;
+
+      // Messages subcollection: participants read/write, any auth user deletes.
+      match /Messages/{messageId} {
+        allow read: if request.auth != null
+                    && request.auth.uid in get(/databases/$(database)/documents/Chats/$(chatId)).data.participants;
+        allow create: if request.auth != null;
+        allow delete: if request.auth != null;
+      }
+    }
+  }
+}

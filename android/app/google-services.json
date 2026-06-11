@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1028460968862",
+    "firebase_url": "https://utm-lost-found-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "utm-lost-found",
+    "storage_bucket": "utm-lost-found.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028460968862:android:fe146a6ab21cb94eedf48f",
+        "android_client_info": {
+          "package_name": "com.example.utmSecure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASwFgyqjV3xd6OCrE9W-GgsG4mzUkxwTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028460968862:android:f03593b5af07bdfcedf48f",
+        "android_client_info": {
+          "package_name": "com.example.utm_secure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASwFgyqjV3xd6OCrE9W-GgsG4mzUkxwTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
