@@ -113,7 +113,8 @@ class NotificationService {
     final chatId = matchData['chatId'] as String?;
     if (chatId == null) return;
 
-    final myRole = matchData['uid1'] == uid ? 'owner' : 'finder';
+    final chatDoc = await FirebaseFirestore.instance.collection('Chats').doc(chatId).get();
+    final myRole = (chatDoc.data()?['roles'] as Map<String, dynamic>?)?[uid] as String? ?? 'finder';
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(

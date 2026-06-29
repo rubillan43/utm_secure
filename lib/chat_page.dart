@@ -283,8 +283,10 @@ class _ChatPageState extends State<ChatPage> {
 
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (_scrollCtrl.hasClients) {
-                        _scrollCtrl.jumpTo(
-                            _scrollCtrl.position.maxScrollExtent);
+                        final pos = _scrollCtrl.position;
+                        if (pos.pixels >= pos.maxScrollExtent - 100) {
+                          _scrollCtrl.jumpTo(pos.maxScrollExtent);
+                        }
                       }
                     });
 

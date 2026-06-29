@@ -31,7 +31,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -407,7 +410,6 @@ class _MatchCard extends StatelessWidget {
     final isHighConfidence = score >= 0.80;
     final chatId = data['chatId'] as String?;
     final uid = FirebaseAuth.instance.currentUser!.uid;
-    final myRole = data['uid1'] == uid ? 'owner' : 'finder';
 
     final scoreColor =
         isHighConfidence ? Colors.green.shade700 : _maroon;
@@ -419,7 +421,7 @@ class _MatchCard extends StatelessWidget {
       shadowColor: Colors.black.withValues(alpha: 0.08),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () {
+        onTap: () async {
           if (chatId == null) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -427,6 +429,9 @@ class _MatchCard extends StatelessWidget {
             );
             return;
           }
+          final chatDoc = await FirebaseFirestore.instance.collection('Chats').doc(chatId).get();
+          final myRole = (chatDoc.data()?['roles'] as Map<String, dynamic>?)?[uid] as String? ?? 'finder';
+          if (!context.mounted) return;
           Navigator.push(
             context,
             MaterialPageRoute(
